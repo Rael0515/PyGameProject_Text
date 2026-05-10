@@ -33,3 +33,11 @@ def Shop(player):
 
         else:
             print("상인: 또 오렴!")
+
+def EXShop(player):
+    print("상인: 안녕~ 여긴 특수상점이란다!")
+    print("상인: 뭘 사러 왔니?")
+
+def WeaponShop(player):
+    print("상인: 안녕~ 여긴 무기상점이란다!")
+    print("상인: 뭘 사러 왔니?")

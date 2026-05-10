@@ -52,3 +52,7 @@ class FinalBoss(Enemy): #최종보스
 class EXPEnemy(Enemy): #경험치 배수 몬스터
     def __init__(self):
         super().__init___("경험치 기부천사", )
+
+class MoneyEnemy(Enemy): #최종보스
+    def __init__(self):
+        super().__init__("보물지킴이", ) #name, (max, now)hp, atk, defense, money, exp

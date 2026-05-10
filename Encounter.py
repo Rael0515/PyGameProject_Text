@@ -54,14 +54,14 @@ def FightEnemy(player, enemy): #return 0
     return 0
     
 
-def EnemyEncounter(mode, player, enemynum): #Enemynum 1: normal , 2: Middle, 3: Final #return 0 (normal)|| return -1(err)|| return 1 (ending)
+def EnemyEncounter(mode, player, enemynum): #return 0 (normal)|| return -1(err)|| return 1 (ending)
+    #Enemynum 1: normal , 2: Middle, 3: Final 
     print("적이 나왔다!")
-    if enemynum == 1:
-        enemy_instance = NormalEnemy()
-    elif enemynum == 2:
-        enemy_instance = MiddleBoss()
-    elif enemynum == 3:
-        enemy_instance = FinalBoss()
+    if enemynum == 1:   enemy_instance = NormalEnemy()
+    elif enemynum == 2: enemy_instance = MiddleBoss()
+    elif enemynum == 3: enemy_instance = FinalBoss()
+    elif enemynum == 5: enemy_instance = EXPEnemy()
+    elif enemynum == 6: enemy_instance = MoneyEnemy()
     else:
         print("System: 잘못된 접근입니다.")
         return -1
