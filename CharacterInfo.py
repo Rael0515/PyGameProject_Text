@@ -8,13 +8,20 @@ class Character:
         self.hp = 100 #현재 hp
         self.atk = 10
         self.defen = 5
+        #------------------턴 관련 스텟 or 상태
+        self.turnatk = [] #[[name, num, turn]]
+        self.turndef = [] #[[name, num, turn]]
 
+        self.condition = [] #[[condition name, dam, turn]]
+
+        #------------------무기, 아이템 기타 등
         self.floor = 1
         self.money = 1000
         self.weaponName = "청동검"
         self.weaponDam = 20
         self.attackItem = [] #[[name, description, count, power]]
         self.healItem = [] #[[name, description, count, power]]
+        self.turnItem = [] #[[name, count, power, turnatk or turndef, turn]]
 
 ##내부 동작들
     def GetEXP(self, exp): #no return
@@ -36,6 +43,7 @@ class Character:
             print("MAX HP: ", beforehp," -> ",self.maxhp)
             self.GetMoney(money)
         print("플레이어 현재 경험치: ", self.exp)
+        input("System: 다음으로 진행하고자 하면 Enter를 누르시오.")
         #return self.level, self.exp, self.maxhp, self.atk, self.defen
     
     def GetMoney(self, money):
@@ -58,12 +66,12 @@ class Character:
 
         if is_get == 0:
             self.healItem.append([item_name, description, num, power])
-            totalcount = 1
+            totalcount = num
             is_get = 1
 
         if is_get == 1:
             print(item_name,"을(를)", num,"개 획득했다!")
-            print("현재", item_name+"은(는)", totalcount, "개 입니다.")
+            print("현재", item_name, "은(는)", totalcount, "개 입니다.")
 
     def GetAttackItem(self, item_name, description, num, power): #no return
         is_get = 0
@@ -77,12 +85,31 @@ class Character:
 
         if is_get == 0:
             self.attackItem.append([item_name, description, num, power])
-            totalcount = 1
+            totalcount = num
             is_get = 1
 
         if is_get == 1:
             print(item_name,"을(를)", num,"개 획득했다!")
             print("현재", item_name,"은(는)", totalcount,"개 입니다.")
+
+    def GetTurnItem(self, item_name, num, power, aord, turn): #no return ##수정요함!
+        is_get = 0
+        totalcount = 0
+        for item in self.turnItem: #존재시 #[[name, count, power, turnatk or turndef, turn]]
+            if item[0] == item_name:
+                item[1]+=num
+                totalcount = item[1]
+                is_get = 1
+                break
+
+        if is_get == 0: #부존재
+            self.healItem.append([item_name, num, power, aord, turn])
+            totalcount = num
+            is_get = 1
+
+        if is_get == 1:
+            print(item_name,"을(를)", num,"개 획득했다!")
+            print("현재", item_name, "은(는)", totalcount, "개 입니다.")
 
     def UseHealItem(self, item_name): #return 0 || return -1 (noItem)
         power = 0
@@ -104,6 +131,7 @@ class Character:
                 print("현재", item[0],"은(는)", item[2],"개 남았다.")
                 return 0
         return -1
+    
     def UseAttackItem(self, item_name): #return power || return -1 (noItem)
         power = 0
         for item in self.attackItem:#[[name, description, count, power]]
@@ -118,6 +146,28 @@ class Character:
                     return power
                 print("현재", item[0],"은(는)", item[2],"개 남았다.")
                 return power
+        return -1
+    
+    def UseTurnItem(self, item_name): #return 0 || return -1 (noItem)
+        for item in self.healItem: #[[name, count, power, turnatk or turndef, turn]]
+            if item[0] == item_name: #존재
+                item[1] -= 1
+                if item[3] == "turnatk":#turnatk = [[name, num, turn]]
+                    self.turnatk.append([item[0], item[2], item[4]])
+                    aord = 1
+                else:#turndef = [[name, num, turn]]
+                    self.turndef.append([item[0], item[2], item[4]])
+                    aord = 0
+                
+                print(self.name,"은(는)",item[0],"을(를) 사용했다!")
+                print(self.name,"은(는) 일시적으로",aord, "이(가)",item[2],"만큼 올랐다!")
+
+                if item[1] <= 0:
+                    self.turnItem.remove(item)
+                    print("마지막", item[0],"을(를) 사용했다!")
+                    return 0
+                print("현재", item[0],"은(는)", item[1],"개 남았다.")
+                return 0
         return -1
 
 ##기초치 획득
@@ -134,6 +184,44 @@ class Character:
             earn = int(self.money*(percent/100))
         self.money+=earn
         return int(self.money)
+    
+    def TotalATK(self): #return atk, is_end #turnatk = [[name, num, turn]]
+        totalatk = self.atk + self.weaponDam
+        is_end = "no"
+        for item in self.turnatk:
+            totalatk+= item[1]
+            item[2] -= 1
+            if item[2] <= 0:
+                is_end = item[0]
+                self.turnatk.remove(item)
+        return totalatk , is_end
+    
+    def TotalDEF(self): #return def, is_end #turndef = [[name, num, turn]]
+        totaldef = self.defen
+        is_end = "no"
+        for item in self.turndef:
+            totaldef += item[1]
+            item[2] -= 1
+            if item[2] <= 0:
+                is_end = item[0]
+                self.turndef.remove(item)
+        return totaldef , is_end
+    
+    def GetTotalATK(self): #return totalatk, turn
+        totalatk = self.atk + self.weaponDam
+        turn = 0
+        for item in self.turnatk: #turnatk = [[name, num, turn]]
+            totalatk+= item[1]
+            turn += item[1]
+        return totalatk, turn
+    
+    def GetTotalDEF(self): #return totaldef, turn
+        totaldef = self.defen
+        turn = 0
+        for item in self.turndef: #turndef = [[name, num, turn]]
+            totaldef += item[1]
+            turn += item[1]
+        return totaldef, turn
     
 ##실제 동작들
 
@@ -164,9 +252,8 @@ class Character:
           
         return self.hp, total
     
-    def DoAttack(self): #return total
-        total = self.atk + self.weaponDam
-        return total
+    def DoAttack(self): #return atk, is_end
+        return self.TotalATK()
     
     def Died(self): #exit(0)
         from FinalScore import FinalScore
@@ -214,7 +301,32 @@ class Character:
                 print("-"*30, end="")
             print("-"*20)
         return 0
+    
+    def ShowTurnItem(self): #return -1(err) || return 0(normal)
+        if not self.turnItem:
+            print("파워 업 아이템이 없습니다.")
+            return -1
+        else:
+            index = 1
+            print("-"*50, end="")
+            for item in self.attackItem: #[[name, count, power, turnatk or turndef, turn]]
+                print("")
+                print(index, ". ", item[0])
+                if item[3] == "turnatk":
+                    print("용도: 공격수치용")
+                else:
+                    print("용도: 방어수치용")
+                print("파워 업 수치: ", item[2])
+                print("유지 턴 수: ", item[4])
+                print("아이탬 개수: ", item[1])    
+                index+=1
+                print("-"*30, end="")
+            print("-"*20)
+        return 0
+
     def FindHealItem(self, num): #return itemname
         return self.healItem[num - 1][0]
     def FindAttackItem(self, num): #return itemname
         return self.attackItem[num -1][0]
+    def FindTurnItem(self, num): #return itemname
+        return self.turnItem[num -1][0]

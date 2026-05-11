@@ -19,6 +19,7 @@ class Enemy:
     
     def DoNothing(self):
         print(self.name,"은(는) 아무것도 안한다!")
+        return 0 #noting으로 인한 턴 추가 선언
 
     def GetAttacked(self, dam): #return 0, 0 || return self.Killed() (when killed)
         total = dam - self.defen
