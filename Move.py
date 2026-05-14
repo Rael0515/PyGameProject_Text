@@ -4,11 +4,16 @@ from random import randint
 
 def PlayerMove(player, enemy, turn):
     while True:
-        print(turn,"턴|| 1. 공격 |2. 아이템사용|3. 도망(구현안함)")
-        print("|| 적 HP: ", enemy.hp, "| 적 공격력: ", enemy.atk,"| 적 방어력: ", enemy.defen,"||")
+        print("-"*50)
+        print("||",turn,"턴||")
+        print(player.name, "은 무얼할까?")
+        print("|1. 공격 |2. 아이템사용 |3. 도망(구현안함)")
+        totalatk, turnatk = player.GetTotalATK()
+        totaldef, turndef = player.GetTotalDEF()
+        print("||", enemy.name, "| HP: ", enemy.hp, "| 적 공격력: ", enemy.atk,"| 적 방어력: ", enemy.defen,"||")
         print("||"+player.name,"| HP: ", player.hp,"/",player.maxhp ,
-              "| 공격력: ", player.GetTotalATK(), "(파워업: ", player.GetTotalATK() - player.atk - player.weaponDam, ")",
-              "| 방어력: ", player.GetTotalDEF(), "(파워업: ", player.GetTotalDEF() - player.defen, ") ||")
+              "| 공격력: ", totalatk, "(파워업: ", turnatk, ")",
+              "| 방어력: ", totaldef, "(파워업: ", turndef, ") ||")
         print("-"*50)
         num = GetNumber(1, 3)
         if num == 1: #1. 공격
@@ -19,6 +24,7 @@ def PlayerMove(player, enemy, turn):
                 print(is_end,"의 효과가 끝났다!")
             turn += 1
             return turn
+        
         elif num == 2: #2. 아이템사용
             while True:
                 print("1. 회복아이템 | 2. 공격아이템 | 3. 파워업 아이템 | 4. 뒤로가기")

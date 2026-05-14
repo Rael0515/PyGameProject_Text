@@ -1,17 +1,4 @@
-def getAttackItemList(): #return (list)Item 
-    #[[name, Description, damage, price],]
-    Item = [["수류탄","던지기 전에는 손에서 꼭 쥐고 놓지 마렴!", 900, 900], 
-            ["화염병","파이어 앤드 저스티스!", 800, 800], 
-            ["방패","최고의 공격은 방어다!", 500, 500], 
-            ["총","대화(물리)", 700, 700]]
-    return Item
-
-def getHealItemList(): #return (list)Item 
-    #[[name, Description, healingLevel, price],]
-    Item = [["빨간포션","최고급 포션이야!", 1000000, 10000], 
-            ["파란포션","약간 애매한 중급 포션이야!", 500, 1000], 
-            ["초록포션","저급 포션이지만 가격이 매우 싸단다!", 300, 800]]
-    return Item
+from ItemList import *
 
 def ShowAttackItemList(): #no return
     Item = getAttackItemList()

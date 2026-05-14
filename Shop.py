@@ -34,9 +34,25 @@ def Shop(player):
         else:
             print("상인: 또 오렴!")
 
+
 def EXShop(player):
     print("상인: 안녕~ 여긴 특수상점이란다!")
     print("상인: 뭘 사러 왔니?")
+    while True:
+        print("1. 파워 업 아이템 | 2. 전투용 아이템 | 3. 이동 아이템 | 4. 향로 아이템")
+        num  = GetNumber(1, 4)
+        if num == 1:
+            getTurnItemList()
+        elif num == 2:
+            getBattleItemList()
+        elif num == 3:
+            getMoveItemList()
+        elif num == 4:
+
+        else:
+
+
+    
 
 def WeaponShop(player):
     print("상인: 안녕~ 여긴 무기상점이란다!")

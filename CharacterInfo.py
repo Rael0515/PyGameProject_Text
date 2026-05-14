@@ -13,15 +13,21 @@ class Character:
         self.turndef = [] #[[name, num, turn]]
 
         self.condition = [] #[[condition name, dam, turn]]
+        self.incense = [] #[[condition name, effect, floor]]
 
-        #------------------무기, 아이템 기타 등
+        #------------------무기, 기타 등
         self.floor = 1
         self.money = 1000
         self.weaponName = "청동검"
         self.weaponDam = 20
+
+        #------------------아이템리스트
         self.attackItem = [] #[[name, description, count, power]]
         self.healItem = [] #[[name, description, count, power]]
         self.turnItem = [] #[[name, count, power, turnatk or turndef, turn]]
+        self.runItem = [] #[[name, description, count]]
+        self.moveItem = [] #[[name, description, count, moveto]]
+        self.incenseItem = [] #[[name, description, count, floor, effect]]
 
 ##내부 동작들
     def GetEXP(self, exp): #no return
